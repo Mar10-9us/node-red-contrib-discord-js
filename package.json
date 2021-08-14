@@ -1,19 +1,20 @@
 {
-  "name": "node-red-contrib-example-discord",
+  "name": "node-red-contrib-discord-js",
   "version": "1.0.0",
-  "description": "My first node. Converts all text to lower-case.",
-  "main": "discord-connector-config.js",
+  "description": "A node-RED module that implements Discord.js v. 12.5.3 in node-RED",
+  "main": "module/discord-connector-config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mar10-9us",
+  "homepage": "https://github.com/Mar10-9us/node-red-contrib-discord-js/tree/main",
+  "license": "MIT",
   "node-red": {
     "nodes": {
-      "receiveMessage": "receive-message.js",
-      "DiscordConnection": "discord-connector-config.js",
-      "replyMessage": "reply-message.js",
-      "getRole": "get-role.js"
+      "receiveMessage": "module/receive-message.js",
+      "DiscordConnection": "module/discord-connector-config.js",
+      "replyMessage": "module/reply-message.js",
+      "getRole": "module/get-role.js"
     }
   },
   "dependencies": {
