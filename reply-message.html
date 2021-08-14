@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    RED.nodes.registerType('replyMessage', {
+        category: 'function',
+        color: '#5662f6',
+        icon: 'DiscordLogo.png',
+        defaults: {
+            name: {value: ""},
+            connection: {value: "", type:"DiscordConnection"},
+            replyTo: {value: "message", required: true}
+        },
+
+        inputs: 1,
+        outputs: 0,
+        label: function() {
+            return this.name||"replyMessage"
+        }
+    })
+
+</script>
+
+<script type="text/html" data-template-name="replyMessage">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-connection"><i class="fa fa-server"></i> Connection</label>
+        <input id="node-input-connection">
+    </div>
+    <div class="form-row">
+        <label for="node-input-replyTo"><i class="fa fa-reply"></i> Reply to?</label>
+        <select id="node-input-replyTo">
+            <option value="channel">Channel</option>
+            <option value="message">Message</option>
+        </select>
+    </div>
+</script>
