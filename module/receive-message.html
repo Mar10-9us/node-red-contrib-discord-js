@@ -35,6 +35,49 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="receiveMessage">
-    <p>A simple node that converts the message payloads into all lower-case characters</p>
+<script type='text/html' data-help-name='receiveMessage'>
+    <p>This node listens to all channels the bot has access to and returns the messages unless the message is from a bot</p>
+
+    <h3>Outputs</h3>
+    <dl class='message-properties'>
+        <dt>payload
+            <span class='property-type'>String</span>
+        </dt>
+        <dd>Contains the message sent</dd>
+
+        <dt><code>msg.discord.message</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Contains the message sent</dd>
+
+        <dt><code>msg.discord.messageId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Contains the id of the message sent</dd>
+
+        <dt><code>msg.discord.serverName</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Contains the name of the server that sent the message</dd>
+
+        <dt><code>msg.discord.serverId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Contains the id of the server that sent the message</dd>
+
+        <dt><code>msg.discord.userId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Contains the id of the user that sent the message</dd>
+
+        <dt><code>msg.discord.username</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Contains the username of the user that sent the message</dd>
+
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node listens to all channels the bot has access to and returns the messages unless the message is from a bot. The node inserts the message into the payload, but also creates <code>msg.discord</code> that creates relevant information.</p>
+    <p>For advanced users, i will also inform that this temporary saves the discord-object in memory for about fifteen seconds after it's received. This so the node can reuse the object when replying to messages etc.</p>
 </script>

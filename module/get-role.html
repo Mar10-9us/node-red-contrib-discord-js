@@ -36,3 +36,57 @@
         <input type='text' id='node-input-serverId'>
     </div>
 </script>
+
+<script type='text/html' data-help-name='getRole'>
+    <p>This node gets all the roles of the specified user on the specified server</p>
+
+    <h3>Inputs</h3>
+    <dl class='message-properties'>
+        <dt>payload.userId
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>The userId of the user to get the roles of</dd>
+
+        <dt>payload.serverId
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>The serverId where the user recides.</dd>
+
+        <dt class='optional'><code>msg.discord.userId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Alternative properties - The userId of the user to get the roles of</dd>
+
+        <dt class='optional'><code>msg.discord.serverId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Alternative properties - The serverId where the user recides.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class='message-properties'>
+        <dt>payload
+            <span class='property-type'>Array</span>
+        </dt>
+        <dd>Outputs an array of roles</dd>
+
+        <dt><code>msg.discord</code>
+            <span class='property-type'>object</span>
+        </dt>
+        <dd>
+            An object which contains roles, userId & serverId
+        </dd>
+
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node will try to get the roles of the specified user in the specified server. To be able to fetch the roles, the node needs both an userId and an serverId. The node will look for these properties in this order:</p>
+    <dl>
+        <dt>1. <code>payload</code></dt>
+        <dd>msg.payload.userId & msg.payload.serverId</dd>
+        <dt>2. node-properties</dt>
+        <dd>If you specify the properties in the nodes config</dd>
+        <dt>3. <code>msg.discord</code></dt>
+        <dd>msg.discord.userId & msg.discord.serverId</dd>
+    </dl>
+</script>

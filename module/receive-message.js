@@ -31,7 +31,7 @@ module.exports = function (RED) {
                     "servername": message.channel.guild.name,
                     "serverId": message.guild.id,
                     "userId": message.member.id,
-                    "Username": message.member.user.username
+                    "username": message.member.user.username
                 }
             }
 
