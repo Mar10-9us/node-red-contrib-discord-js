@@ -1,7 +1,4 @@
 module.exports = function (RED) {
-    // var {removeEntry} = require('./helperFunctions/MessageHandling')
-    var { getDiscordProperty } = require('./helperFunctions/MessageHandling')
-
     function replyMessage(config) {
         RED.nodes.createNode(this, config);
 

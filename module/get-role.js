@@ -1,5 +1,5 @@
 module.exports = function (RED) {
-    var { isString, fetchRoles, getDiscordProperty } = require('./helperFunctions/MessageHandling')
+    var { fetchRoles, getDiscordProperty } = require('./helperFunctions/MessageHandling')
     var { redStatus, greenStatus } = require('./helperFunctions/nodeStatus')
     function getRole(config) {
         RED.nodes.createNode(this, config);

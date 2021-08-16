@@ -1,11 +1,5 @@
 module.exports = function (RED) {
-    // var {removeEntry} = require('./helperFunctions/MessageHandling')
-    //  var { getDiscordProperty } = require('./helperFunctions/MessageHandling')
-
-    // let messageListener = 
-
     function receiveMessage(config) {
-
         RED.nodes.createNode(this, config);
         var parent = RED.nodes.getNode(config.connection)
         this.showStatus = config.showStatus
@@ -19,7 +13,6 @@ module.exports = function (RED) {
         node.client.on('message', message => {
             if (message.author.bot) return;
 
-            // node.thisStore[message.id] = message.id
             node.messageStore.messages.set(message.id, message)
 
             let msg = {
@@ -38,7 +31,6 @@ module.exports = function (RED) {
             // Construct mesasge object
             node.send(msg, false);
 
-            // makes sure 
             node.messageStore.delayedDelete(message.id, 15000)
         })
 

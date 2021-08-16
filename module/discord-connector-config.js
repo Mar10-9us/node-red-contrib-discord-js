@@ -1,15 +1,8 @@
 module.exports = function (RED) {
-    // 
     var events = require('events')
     var Discord = require('discord.js')
-    // let { DCClient } = require('./helperFunctions/discordClient')
-
     function DiscordConnection(config) {
         RED.nodes.createNode(this, config);
-
-
-
-        // FUNCTIONS DEFINED HERE
 
         // Due to the object received by the discord-client causes node-red to crash, i've decided to temporary save the object to a lookup-table.
         // The message-object get's deleted after x seconds, or when it is processed by a reply-node.
@@ -59,8 +52,6 @@ module.exports = function (RED) {
 
         var node = this;
 
-        // Problemer med at den generer flere instanser. https://discordjs.guide/popular-topics/errors.html#request-to-use-token-but-token-was-unavailable-to-the-client
-        // Kanskje dette kan løses ved å lagre klienten i node-kontekst?
         this.on('close', async function (removed, done) {
             if (removed) {
                 // if removed
