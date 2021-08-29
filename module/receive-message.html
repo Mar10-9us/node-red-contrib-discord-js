@@ -27,7 +27,7 @@
         <input id="node-input-connection">
     </div>
     <div class="form-row">
-        <p>Show the status on how many messages are preserved in memory.</p>
+        <p>Show the status of how many messages are preserved in memory</p>
     </div>
     <div class="form-row">
         <label for="node-input-showStatus"><i class="fa fa-tag"></i> Show status</label>
@@ -58,26 +58,26 @@
         <dt><code>msg.discord.serverName</code>
             <span class='property-type'>string</span>
         </dt>
-        <dd>Contains the name of the server that sent the message</dd>
+        <dd>Contains the name of the guild where the message was sent</dd>
 
         <dt><code>msg.discord.serverId</code>
             <span class='property-type'>string</span>
         </dt>
-        <dd>Contains the id of the server that sent the message</dd>
+        <dd>Contains the id of the guild where the message was sent</dd>
 
-        <dt><code>msg.discord.userId</code>
+        <dt><code>msg.discord.memberId</code>
             <span class='property-type'>string</span>
         </dt>
-        <dd>Contains the id of the user that sent the message</dd>
+        <dd>Contains the id of the member that sent the message</dd>
 
         <dt><code>msg.discord.username</code>
             <span class='property-type'>string</span>
         </dt>
-        <dd>Contains the username of the user that sent the message</dd>
+        <dd>Contains the username of the member that sent the message</dd>
 
     </dl>
 
     <h3>Details</h3>
-    <p>This node listens to all channels the bot has access to and returns the messages unless the message is from a bot. The node inserts the message into the payload, but also creates <code>msg.discord</code> that creates relevant information.</p>
-    <p>For advanced users, i will also inform that this temporary saves the discord-object in memory for fifteen seconds after it's received. This so the node can reuse the object when replying to messages etc.</p>
+    <p>This node listens to all channels the bot has access to and returns the messages unless the message is from a bot. The node inserts the message into the payload, but also creates <code>msg.discord</code> that stores relevant information.</p>
+    <p>For advanced users, i will also inform that this temporary saves the discord-object in memory for 10 seconds after it's received. This so the node can reuse the object when replying to messages etc.</p>
 </script>
