@@ -7,7 +7,6 @@ module.exports = function (RED) {
         this.messageStore = parent.messageStore
         this.client = parent.client
 
-        // Allows the use of 'node' inside the client.on-listener.
         var node = this;
 
         node.client.on('message', message => {
