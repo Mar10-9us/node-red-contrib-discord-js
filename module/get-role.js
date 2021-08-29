@@ -9,8 +9,6 @@ module.exports = function (RED) {
         this.client = this.connection.client
         this.messageStore = this.connection.messageStore
 
-
-
         var node = this;
 
         node.on('input', async function (msg, send, done) {
@@ -26,55 +24,57 @@ module.exports = function (RED) {
 
             // if messageId exists, it's most likely originating from the receiveMessage-node.
             if (messageId) {
+                let roles 
                 try {
-                    let roles = Array.from(messageStore.messages.get(messageId).member.roles.cache.map(role => role.name))
+                    roles = Array.from(messageStore.messages.get(messageId).member.roles.cache.map(role => role.name))
 
                     node.status(greenStatus("Roles fetched using message-object"))
                     msg.payload = roles
                     msg.discord.roles = roles
                 } catch (error) {
-                    return done(error);
                 }
 
-                send(msg)
-                return done()
-            } else {
-
-                msg.discord = msg?.discord || {}
-
-                try {
-                    guild = await node.client.guilds.fetch(guildId)
-                    msg.discord.guildName = msg.discord?.guildName || guild.name
-                    msg.discord.guildId = msg.discord?.guildId || guild.id
-                } catch (error) {
-                    node.status(redStatus('Failed to fetch roles'))
-                    return done(`Failed to fetch guildId with the following error: ${error.message}`);
+                if (roles) {
+                    send(msg)
+                    return done()
                 }
-
-                try {
-                    member = await guild.members.fetch(memberId)
-                    msg.discord.memberId = msg.discord?.memberId || member.id
-                    msg.discord.username = msg.discord?.username || member.user.username
-                } catch (error) {
-                    node.status(redStatus('Failed to fetch member'))
-                    return done(`Failed to fetch memberId with the following error: ${error.message}`);
-                }
-
-
-                try {
-                    let roles = Array.from(member.roles.cache.map(role => `${role.name}`));
-                    msg.discord.roles = msg.discord?.roles || roles
-
-                } catch (error) {
-                    node.status(redStatus('Failed to fetch roles'))
-                    return done(`xFailed to fetch roles with the following error: ${error.message}`);
-                }
-
-                send(msg)
-                node.status(greenStatus('Roles fetched'))
-
-                return done()
             }
+
+            // goes down this path if message was not found in messageStore or it failed to retrieve the roles.
+            msg.discord = msg?.discord || {}
+
+            try {
+                guild = await node.client.guilds.fetch(guildId)
+                msg.discord.guildName = msg.discord?.guildName || guild.name
+                msg.discord.guildId = msg.discord?.guildId || guild.id
+            } catch (error) {
+                node.status(redStatus('Failed to fetch roles'))
+                return done(`Failed to fetch guildId with the following error: ${error.message}`);
+            }
+
+            try {
+                member = await guild.members.fetch(memberId)
+                msg.discord.memberId = msg.discord?.memberId || member.id
+                msg.discord.username = msg.discord?.username || member.user.username
+            } catch (error) {
+                node.status(redStatus('Failed to fetch member'))
+                return done(`Failed to fetch memberId with the following error: ${error.message}`);
+            }
+
+            try {
+                let roles = Array.from(member.roles.cache.map(role => `${role.name}`));
+                msg.discord.roles = msg.discord?.roles || roles
+
+            } catch (error) {
+                node.status(redStatus('Failed to fetch roles'))
+                return done(`xFailed to fetch roles with the following error: ${error.message}`);
+            }
+
+            send(msg)
+            node.status(greenStatus('Roles fetched'))
+
+            return done()
+
 
         })
     }

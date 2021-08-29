@@ -31,7 +31,7 @@ module.exports = function (RED) {
             // Construct mesasge object
             node.send(msg, false);
 
-            node.messageStore.delayedDelete(message.id, 15000)
+            node.messageStore.delayedDelete(message.id, 10000)
         })
 
         if (node.showStatus) {
