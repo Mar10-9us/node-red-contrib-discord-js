@@ -28,7 +28,6 @@ module.exports = function (RED) {
                 }
             }
 
-            // Construct mesasge object
             node.send(msg, false);
 
             node.messageStore.delayedDelete(message.id, 10000)
