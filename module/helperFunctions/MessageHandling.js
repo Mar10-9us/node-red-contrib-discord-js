@@ -53,30 +53,30 @@ let messageListener = message => {
 function getDiscordProperty(msg, node) {
     // Will check payload -> config -> discord-object 
 
-    if (msg?.payload?.serverId && msg?.payload?.userId) {
+    if (msg?.payload?.serverId && msg?.payload?.memberId) {
         return {
-            userId: msg.payload.userId,
+            memberId: msg.payload.memberId,
             serverId: msg.payload.serverId,
             messageId: null,
             propSource: 'payload'
         }
-    } else if (node.userId && node.serverId) {
+    } else if (node.memberId && node.serverId) {
         return {
-            userId: node.userId,
+            memberId: node.memberId,
             serverId: node.serverId,
             messageId: null,
             propSource: 'config'
         }
-    } else if (msg?.discord?.messageId && msg?.discord?.serverId && msg?.discord?.userId) {
+    } else if (msg?.discord?.messageId && msg?.discord?.serverId && msg?.discord?.memberId) {
         return {
-            userId: msg.discord.userId,
+            memberId: msg.discord.memberId,
             serverId: msg.discord.serverId,
             messageId: msg.discord.messageId,
             propSource: 'discord'
         }
     } else {
         return {
-            userId: null,
+            memberId: null,
             serverId: null,
             messageId: null,
             propSource: null
@@ -93,35 +93,42 @@ function isString(x) {
 /**
  * 
  * @param {Object} node Node-object
- * @param {string} errorSource 
- * @param {string} userId a discord-users id
+ * @param {string} memberId a discord-users id
  * @param {string} serverId a discord-servers id
  * @param {Object} redStatus object for generating status.
+ * @param {Object} msg msg-object from discord. Will be used to populate discord-object of msg.
  * @returns {string[]} Roles
  */
 
-let fetchRoles = async (node, errorSource, userId, serverId, redStatus) => {
+let fetchRoles = async (node, memberId, serverId, redStatus, msg) => {
+    msg.discord = msg?.discord || {} 
+
     try {
         guild = await node.client.guilds.fetch(serverId)
+        msg.discord.guildName = msg.discord?.guildName || guild.name
+        msg.discord.guildId = msg.discord?.guildId || guild.id
     } catch (error) {
         node.status(redStatus('Failed to fetch roles'))
-        throw `Failed to fetch server using ${errorSource} with the following error: ${error.message}`;
+        throw `Failed to fetch guildId with the following error: ${error.message}`;
     }
 
     try {
-        member = await guild.members.fetch(userId)
+        member = await guild.members.fetch(memberId)
+        msg.discord.memberId = msg.discord?.memberId || member.id
+        msg.discord.username = msg.discord?.username || member.user.username 
     } catch (error) {
-        node.status(redStatus('Failed to fetch status using payload-data'))
-        throw `Failed to fetch user using ${errorSource} with the following error: ${error.message}`
+        node.status(redStatus('Failed to fetch member'))
+        throw `Failed to fetch memberId with the following error: ${error.message}`;
     }
 
 
     try {
         let roles = Array.from(member.roles.cache.map(role => `${role.name}`));
+        msg.discord.roles = msg.discord?.roles || roles
         return roles
     } catch (error) {
         node.status(redStatus('Failed to fetch roles'))
-        throw `Failed to fetch roles using ${errorSource} with the following error: ${error.message}`
+        throw `xFailed to fetch roles with the following error: ${error.message}`;
     }
 
 }

@@ -1,0 +1,91 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sendSimpleMessage', {
+        category: 'function',
+        color: '#5662f6',
+        icon: 'DiscordLogo.png',
+        defaults: {
+            name: {value: ""},
+            connection: {value: "", type:"DiscordConnection"},
+            replyTo: {value: "message", required: true}
+        },
+
+        inputs: 1,
+        outputs: 0,
+        label: function() {
+            return this.name||"sendMessage"
+        }
+    })
+
+</script>
+
+<script type="text/html" data-template-name="sendSimpleMessage">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-connection"><i class="fa fa-server"></i> Connection</label>
+        <input id="node-input-connection">
+    </div>
+    <div class="form-row">
+        <label for="node-input-replyTo"><i class="fa fa-reply"></i> Send or reply?</label>
+        <select id="node-input-replyTo">
+            <option value="channel">Send to channel</option>
+            <option value="message">Reply to message</option>
+        </select>
+    </div>
+</script>
+
+<script type='text/html' data-help-name='sendSimpleMessage'>
+    <p>This node sends or replies to a message in a channel.</p>
+
+    <h3>Inputs</h3>
+    <dl class='message-properties'>
+        <dt>payload.memberId
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>The memberId of the user to get the roles of</dd>
+
+        <dt>payload.serverId
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>The serverId where the user recides.</dd>
+
+        <dt class='optional'><code>msg.discord.memberId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Alternative properties - The memberId of the user to get the roles of</dd>
+
+        <dt class='optional'><code>msg.discord.serverId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Alternative properties - The serverId where the user recides.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class='message-properties'>
+        <dt>payload
+            <span class='property-type'>Array</span>
+        </dt>
+        <dd>Outputs an array of roles</dd>
+
+        <dt><code>msg.discord</code>
+            <span class='property-type'>object</span>
+        </dt>
+        <dd>
+            An object which contains roles, memberId & serverId
+        </dd>
+
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node will try to get the roles of the specified user in the specified server. To be able to fetch the roles, the node needs both an memberId and an serverId. The node will look for these properties in this order:</p>
+    <dl>
+        <dt>1. payload</dt>
+        <dd>msg.payload.memberId & msg.payload.serverId</dd>
+        <dt>2. node-properties</dt>
+        <dd>If you specify the properties in the nodes config</dd>
+        <dt>3. <code>msg.discord</code></dt>
+        <dd>msg.discord.memberId & msg.discord.serverId</dd>
+    </dl>
+</script>

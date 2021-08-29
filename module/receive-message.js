@@ -21,9 +21,9 @@ module.exports = function (RED) {
                 "discord": {
                     "message": message.content,
                     "messageId": message.id,
-                    "servername": message.channel.guild.name,
-                    "serverId": message.guild.id,
-                    "userId": message.member.id,
+                    "guildName": message.channel.guild.name,
+                    "guildId": message.guild.id,
+                    "memberId": message.member.id,
                     "username": message.member.user.username
                 }
             }
