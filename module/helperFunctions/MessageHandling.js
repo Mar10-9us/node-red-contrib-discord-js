@@ -128,7 +128,7 @@ let fetchRoles = async (node, memberId, serverId, redStatus, msg) => {
         return roles
     } catch (error) {
         node.status(redStatus('Failed to fetch roles'))
-        throw `xFailed to fetch roles with the following error: ${error.message}`;
+        throw `Failed to fetch roles with the following error: ${error.message}`;
     }
 
 }
