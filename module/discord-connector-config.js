@@ -52,7 +52,7 @@ module.exports = function (RED) {
 
         var node = this;
 
-        this.on('close', async function (removed, done) {
+        node.on('close', async function (removed, done) {
             if (removed) {
                 // if removed
                 try {
