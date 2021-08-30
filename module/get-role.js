@@ -20,7 +20,7 @@ module.exports = function (RED) {
             let messageId = msg?.discord?.messageId || null
 
             if (!(memberId)) return done('No memberId specified')
-            if (!(guildId)) return done('No guildId(server id) specified')
+            if (!(guildId)) return done('No guildId specified')
 
             // if messageId exists, it's most likely originating from the receiveMessage-node.
             if (messageId) {
@@ -67,7 +67,7 @@ module.exports = function (RED) {
 
             } catch (error) {
                 node.status(redStatus('Failed to fetch roles'))
-                return done(`xFailed to fetch roles with the following error: ${error.message}`);
+                return done(`Failed to fetch roles with the following error: ${error.message}`);
             }
 
             send(msg)

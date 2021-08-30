@@ -8,22 +8,42 @@ module.exports = function (RED) {
         this.client = parent.client
 
         var node = this;
-
+        // Should this be registered in the configuration node instead?
         node.client.on('message', message => {
             if (message.author.bot) return;
 
             node.messageStore.messages.set(message.id, message)
 
-            let msg = {
-                "payload": message.content,
+            let msg
 
-                "discord": {
-                    "message": message.content,
-                    "messageId": message.id,
-                    "guildName": message.channel.guild.name,
-                    "guildId": message.guild.id,
-                    "memberId": message.member.id,
-                    "username": message.member.user.username
+            if (message.channel.type === 'text') {
+
+                msg = {
+                    "payload": message.content,
+
+                    "discord": {
+                        "message": message.content,
+                        "messageId": message.id,
+                        "guildName": message?.channel?.guild?.name,
+                        "guildId": message.guild.id,
+                        "memberId": message.member.id,
+                        "username": message.member.user.username,
+                        "channelType": message.channel.type
+                    }
+                }
+
+
+            } else {
+                msg = {
+                    "payload": message.content,
+
+                    "discord": {
+                        "message": message.content,
+                        "messageId": message.id,
+                        "memberId": message.author.id,
+                        "username": message.author.username,
+                        "channelType": message.channel.type
+                    }
                 }
             }
 
