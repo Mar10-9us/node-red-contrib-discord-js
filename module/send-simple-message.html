@@ -1,86 +1,96 @@
-<script type="text/javascript">
+<script type='text/javascript'>
     RED.nodes.registerType('sendSimpleMessage', {
         category: 'function',
         color: '#5662f6',
         icon: 'DiscordLogo.png',
         defaults: {
-            name: {value: ""},
-            connection: {value: "", type:"DiscordConnection"},
-            action: {value: "message", required: true}
+            name: {value: ''},
+            connection: {value: '', type:'DiscordConnection'},
+            action: {value: ''},
+            channelId: {value: ''},
+            message: {value: ''}
         },
 
         inputs: 1,
         outputs: 0,
         label: function() {
-            return this.name||"sendMessage"
+            return this.name||'sendMessage'
         }
     })
 
 </script>
 
-<script type="text/html" data-template-name="sendSimpleMessage">
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+<script type='text/html' data-template-name='sendSimpleMessage'>
+    <div class='form-row'>
+        <label for='node-input-name'><i class='fa fa-tag'></i> Name</label>
+        <input type='text' id='node-input-name' placeholder='Name'>
     </div>
-    <div class="form-row">
-        <label for="node-input-connection"><i class="fa fa-server"></i> Connection</label>
-        <input id="node-input-connection">
+    <div class='form-row'>
+        <label for='node-input-connection'><i class='fa fa-server'></i> Connection</label>
+        <input id='node-input-connection'>
     </div>
-    <div class="form-row">
-        <label for="node-input-replyTo"><i class="fa fa-reply"></i> Send or reply?</label>
-        <select id="node-input-replyTo">
-            <option value="channel">Send to channel</option>
-            <option value="message">Reply to message</option>
+    <div class='form-row'>
+        <label for='node-input-action'><i class='fa fa-reply'></i> Send or reply?</label>
+        <select id='node-input-action'>
+            <option value='send'>Send to channel</option>
+            <option value='reply'>Reply to message</option>
         </select>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-channelId'><i class='fa fa-tag'></i> Channel Id</label>
+        <input id='node-input-channelId'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-message'><i class='fa fa-tag'></i> Message</label>
+        <input id='node-input-message'> 
     </div>
 </script>
 
 <script type='text/html' data-help-name='sendSimpleMessage'>
-    <p>This node sends or replies to a message in a channel.</p>
+    <p>This replies to or sends an message to a channel.</p>
 
     <h3>Inputs</h3>
     <dl class='message-properties'>
-         <dt><code>msg.guildId</code>
-            <span class='property-type'>string</span>
-        </dt>
-        <dd>The guildId where the member recides</dd>
-
-        <dt class='optional'><code>msg.discord.memberId</code>
-            <span class='property-type'>string</span>
-        </dt>
-        <dd>Alternative properties - The memberId of the user to get the roles of</dd>
-
-        <dt class='optional'><code>msg.discord.guildId</code>
-            <span class='property-type'>string</span>
-        </dt>
-        <dd>Alternative properties - The guildId where the user recides.</dd>
-    </dl>
-
-    <h3>Outputs</h3>
-    <dl class='message-properties'>
         <dt>payload
-            <span class='property-type'>Array</span>
+            <span class='property-type'>string</span>
         </dt>
-        <dd>Outputs an array of roles</dd>
+        <dd>The message to be sent</dd>
 
-        <dt><code>msg.discord</code>
-            <span class='property-type'>object</span>
+         <dt><code>msg.channelId</code>
+            <span class='property-type'>string</span>
         </dt>
-        <dd>
-            An object which contains roles, memberId & guildId
-        </dd>
+        <dd>The channelId to send a message to</dd>
 
+        <dt><code>msg.messageId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>The message to reply to</dd>
+
+        <dt><code>msg.action</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Can be either 'send' or 'reply'. 'Send' sends a message, 'reply' replies to a message.</dd>
+
+        <dt class='optional'><code>msg.discord.channelId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Alternative property populated by other discord-nodes - The channelId to send a message to</dd>
+
+        <dt class='optional'><code>msg.discord.messageId</code>
+            <span class='property-type'>string</span>
+        </dt>
+        <dd>Alternative property populated by other discord-nodes - The message to reply to</dd>
     </dl>
 
     <h3>Details</h3>
-    <p>This node will try to get the roles of the specified user in the specified guild. To be able to fetch the roles, the node needs both an memberId and an guildId. The node will look for these properties in this order:</p>
+    <p>This node will send or reply to a message. To send a message, the node needs an channelId and a message. To reply to a message, the node needs a messageId.</p>
+    <p>The node will look for these properties in this order:</p>
     <dl>
-        <dt>1. payload</dt>
-        <dd>msg.payload.memberId & msg.payload.guildId</dd>
-        <dt>2. node-properties</dt>
+        <dt>1. <code>msg.channelId</code> OR <code>msg.messageId</code> AND <code>msg.payload</code></dt>
+        <dd>The payload contains the message to be sent.</dd>
+        <dt>2. <code>node-properties</code></dt>
         <dd>If you specify the properties in the nodes config</dd>
-        <dt>3. <code>msg.discord</code></dt>
-        <dd>msg.discord.memberId & msg.discord.guildId</dd>
+        <dt>3. <code>msg.discord.channelId</code> OR <code>msg.discord.messageId</code> AND <code>msg.payload</code></dt>
+        <dd>The payload contains the message to be sent.</dd>
     </dl>
 </script>

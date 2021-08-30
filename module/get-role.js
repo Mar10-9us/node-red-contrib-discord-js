@@ -5,6 +5,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
 
         this.connection = RED.nodes.getNode(config.connection);
+        if(!(this.connection)) return;
         var messageStore = this.connection.messageStore
         this.client = this.connection.client
         this.messageStore = this.connection.messageStore

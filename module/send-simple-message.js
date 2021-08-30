@@ -20,17 +20,19 @@ module.exports = function (RED) {
                 done('msg.payload needs to be a string.')
             }
 
-            if (!(msg.payload)) {
-                node.status(redStatus('msg.payload cant be empty.'))
-                done('msg.payload cant be empty.')
-            }
+
 
             // is replyTo set using payload?
-            // node.replyTo = msg.discord
-            node.replyTo = msg.replyTo || config.replyTo 
+            node.action = msg?.action || config?.action || 'send'
+            msg.payload = msg?.payload || config?.message || null
             let message = msg?.discord?.messageId ? node.messageStore.messages.get(msg.discord.messageId) : null
 
-            if (node.replyTo === 'channel') {
+            if (!(msg.payload)) {
+                node.status(redStatus('msg.payload cant be empty.'))
+                return done('Cant send an empty string.')
+            }
+
+            if (node.action === 'send') {
 
                 if (message) {
                     message.channel.send(msg.payload)
