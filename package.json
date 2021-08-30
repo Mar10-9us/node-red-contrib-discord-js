@@ -9,7 +9,7 @@
   "author": "Mar10-9us",
   "homepage": "https://github.com/Mar10-9us/node-red-contrib-discord-js/tree/main",
   "license": "MIT",
-  "keywords": [ "node-red"],
+  "keywords": [ "node-red" ],
   "node-red": {
     "nodes": {
       "receiveMessage": "module/receive-message.js",
