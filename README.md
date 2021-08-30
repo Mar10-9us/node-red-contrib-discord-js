@@ -5,7 +5,7 @@ This module currently has these functionalities
 * Multiple bot support
 	* Each node can connect to the bot of your choice
 * Receive messages
-	* Listens for messages where the bot has access to.
+	* Listens for messages where the bot has access to. This includes direct messages!
 * Get roles
 	* Gets the roles of the specified user.
 * Send messages
