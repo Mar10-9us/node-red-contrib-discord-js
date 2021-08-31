@@ -1,5 +1,5 @@
-# node-red-contrib-discord-js
-hosting a discord-js node-red node.
+# node-red-contrib-discord-js-drusilla
+
 
 This module currently has these functionalities
 * Multiple bot support
