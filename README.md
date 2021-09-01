@@ -1,5 +1,5 @@
-# node-red-contrib-discord-js
-hosting a discord-js node-red node.
+# node-red-contrib-discord-js-drusilla
+This node implements Discord.js V12.5.3 in Node-RED. The only reason for it being named 'Drusilla' at the end is because i had to make the package-name unique.
 
 This module currently has these functionalities
 * Multiple bot support
