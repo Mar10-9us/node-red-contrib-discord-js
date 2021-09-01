@@ -8,60 +8,73 @@ module.exports = function (RED) {
         var connection = RED.nodes.getNode(config.connection);
         var node = this
         node.messageStore = connection.messageStore
-        
+
         node.client = connection.client
 
         node.on('input', async function (msg, send, done) {
 
+            msg.payload = msg?.payload || config?.message || null
+            node.action = msg?.action || config?.action || 'send'
+            let channelId = msg?.channelId || config.channelId || msg?.discord?.channelId || null
+            let messageId = msg?.messageId || msg?.discord?.messageId || null
+            let message = messageId ? node.messageStore.messages.get(messageId) : null
+
+
             if (typeof msg.payload === 'string') {
+                if (!(msg.payload)) {
+                    return done('Cannot send empty string')
+                }
             } else if (typeof msg.payload === 'number') {
                 msg.payload = String(msg.payload);
             } else {
-                done('msg.payload needs to be a string.')
+                return done('msg.payload needs to be a string.')
             }
 
-
-
-            // is replyTo set using payload?
-            node.action = msg?.action || config?.action || 'send'
-            msg.payload = msg?.payload || config?.message || null
-            let message = msg?.discord?.messageId ? node.messageStore.messages.get(msg.discord.messageId) : null
-
-            if (!(msg.payload)) {
-                node.status(redStatus('msg.payload cant be empty.'))
-                return done('Cant send an empty string.')
-            }
 
             if (node.action === 'send') {
-
                 if (message) {
                     message.channel.send(msg.payload)
                         .then(node.messageStore.delayedDelete(msg.discord.messageId, 15000))
                         .catch(error => node.warn(error))
                 } else {
-                    if (msg?.discord?.channelId) {
+                    if (!(channelId)) return done('No channelId specified')
+                    try {
+                        let channel = await node.client.channels.fetch(channelId)
                         try {
-                            let channel = await node.client.channels.fetch(msg.discord.channelId)
-                            channel ? channel.send(msg.payload) : done('Could not send message')
+                            channel.send(msg.payload)
                         } catch (e) {
-                            done('Could not fetch message')
+                            return done('Could not send message')
                         }
+                    } catch (e) {
+                        return done('Could not fetch message')
                     }
-
                 }
 
 
             } else {
-
+                // reply
                 if (message) {
                     try {
-                        (node.messageStore.messages.get(msg.discord.messageId)).reply(msg.payload)
-                            .then(node.messageStore.delayedDelete(msg.discord.messageId, 15000))
+                        (node.messageStore.messages.get(messageId)).reply(msg.payload)
+                            .then(node.messageStore.delayedDelete(messageId, 15000))
                     } catch (e) {
-                        done('Could not send message')
+                        return done('Could not send message')
                     }
                 } else {
-
+                    if (!(messageId)) return done('No messageId specified.')
+                    if (!(channelId)) return done('No channelId specified')
+                    try {
+                        var channel = await node.client.channels.fetch(channelId)
+                        var channelMsg = await channel.messages.fetch(messageId)
+                    } catch (e) {
+                        return done('Failed to fetch channel or message.')
+                    }
+                    
+                    try {
+                        channelMsg.reply(msg.payload)
+                    } catch (e) {
+                        return done('Could not send message')
+                    }
                 }
             }
 
