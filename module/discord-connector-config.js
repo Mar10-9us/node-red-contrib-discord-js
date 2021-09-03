@@ -35,7 +35,6 @@ module.exports = function (RED) {
             let client = new Discord.Client();
 
             client.on('ready', () => {
-                console.log('im ready boiih')
             });
 
             client.login(token);
