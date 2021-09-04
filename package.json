@@ -14,8 +14,9 @@
     "nodes": {
       "receiveMessage": "module/receive-message.js",
       "DiscordConnection": "module/discord-connector-config.js",
-      "replyMessage": "module/send-simple-message.js",
-      "getRole": "module/get-role.js"
+      "sendSimpleMessage": "module/send-simple-message.js",
+      "getRole": "module/get-role.js",
+      "sendAdvancedMessage": "module/send-advanced-message.js"
     }
   },
   "dependencies": {
