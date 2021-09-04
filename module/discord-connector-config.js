@@ -37,8 +37,13 @@ module.exports = function (RED) {
             client.on('ready', () => {
             });
 
-            client.login(token);
+            try {
+                client.login(token);
 
+            } catch (e) {
+                client.destroy();
+                return;
+            }
             return client
         }
 
@@ -47,18 +52,20 @@ module.exports = function (RED) {
 
         this.name = config.name
         this.messageStore = messageStore
+
         this.client = DCClient(this.credentials.token)
 
         var node = this;
 
-        node.on('close', async function (removed, done) {
+        node.on('close', function (removed, done) {
             if (removed) {
                 // if removed
                 try {
+                    console.log('bapri')
                     node.client.removeAllListeners();
                     node.client.destroy();
                 } catch (err) {
-                    done(err)
+                    return done(err)
                 }
             } else {
                 // if restarted
@@ -66,15 +73,18 @@ module.exports = function (RED) {
                     node.client.removeAllListeners();
                     node.client.destroy();
                 } catch (err) {
-                    done(err)
+                    return done(err)
                 }
 
                 // establish connection after a node is restarted.
                 try {
-                    node.client(this.credentials.token)
+                    if (node.client) {
+                        node.client.destroy();
+                    }
+                    node.client = DCClient(this.credentials.token)
                     console.log('logged in again')
                 } catch (err) {
-                    done(err)
+                    return done(err)
                 }
 
             }
