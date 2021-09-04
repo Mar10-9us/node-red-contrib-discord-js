@@ -1,3 +1,0 @@
-This file contains a changelog
-//////////////////////////////
-1.0.3 - You can now specify both message and channelId in the sendSimpleMessage-node
