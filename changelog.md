@@ -1,7 +1,7 @@
 # Changelog
 A summary of the most important features changed per version is found here.
 
-## [1.0.4]
+## [1.0.5]
 FEATURES
 - This module now supports sending embed-messages using sendAdvancedMessage-node. 
  

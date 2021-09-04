@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-discord-js-drusilla",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A node-RED module that implements Discord.js v. 12.5.3 in node-RED",
   "main": "module/discord-connector-config.js",
   "scripts": {
