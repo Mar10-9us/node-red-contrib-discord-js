@@ -59,6 +59,8 @@ module.exports = function (RED) {
                 member = await guild.members.fetch(memberId)
                 msg.discord.memberId = msg.discord?.memberId || member.id
                 msg.discord.username = msg.discord?.username || member.user.username
+                msg.discord.targetUsername = member.user.username
+                msg.discord.targetMemberId = member.id
             } catch (error) {
                 node.status(redStatus('Failed to fetch member'))
                 setTimeout(async function () { node.status({})}, 8000)
