@@ -16,4 +16,4 @@ This module currently has these functionalities
 ---
 
 ## Examples
-![Example1]("https://github.com/Mar10-9us/node-red-contrib-discord-js/blob/main/module/images/Example%20-%20Send%20and%20reply.png")
+![Example1]("images\Example - Send and reply.png")
