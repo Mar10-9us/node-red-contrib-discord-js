@@ -61,7 +61,6 @@ module.exports = function (RED) {
             if (removed) {
                 // if removed
                 try {
-                    console.log('bapri')
                     node.client.removeAllListeners();
                     node.client.destroy();
                 } catch (err) {
