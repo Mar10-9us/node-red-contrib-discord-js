@@ -14,3 +14,8 @@ This module currently has these functionalities
 	* Send messages to a channel, user or reply to a message using strings or objects([embeds](https://discordjs.guide/popular-topics/embeds.html#using-an-embed-object)).
 
 [Remember to get your bot-token!](https://discord.com/developers/applications)
+
+
+### TODO:
+* getUser node
+* Sending files
