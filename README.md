@@ -16,4 +16,4 @@ This module currently has these functionalities
 ---
 
 ## Examples
-![Example1]("./images/Example - Send and reply.png")
+![Example1](/images/ExampleSendAndReply.png)
