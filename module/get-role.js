@@ -5,7 +5,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
 
         this.connection = RED.nodes.getNode(config.connection);
-        if(!(this.connection)) return;
+        if (!(this.connection)) return;
         var messageStore = this.connection.messageStore
         this.client = this.connection.client
         this.messageStore = this.connection.messageStore
@@ -19,18 +19,22 @@ module.exports = function (RED) {
             let memberId = msg?.memberId || config?.memberId || msg?.discord?.memberId || null
             let guildId = msg?.guildId || config?.guildId || msg?.discord?.guildId || null
             let messageId = msg?.discord?.messageId || null
+            let message = messageId ? node.messageStore.messages.get(messageId) : null
 
             if (!(memberId)) return done('No memberId specified')
             if (!(guildId)) return done('No guildId specified')
+            console.log(msg?.memberId)
+            console.log(config?.memberId)
+            console.log(!(msg?.memberId) || !(config?.memberId))
 
             // if messageId exists, it's most likely originating from the receiveMessage-node.
-            if (messageId) {
-                let roles 
+            if (!(!(msg?.memberId) || !(config?.memberId)) && message) {
+                let roles
                 try {
                     roles = Array.from(messageStore.messages.get(messageId).member.roles.cache.map(role => role.name))
 
                     node.status(greenStatus("Roles fetched using message-object"))
-                    setTimeout(async function () { node.status({})}, 8000)
+                    setTimeout(async function () { node.status({}) }, 8000)
                     msg.payload = roles
                     msg.discord.roles = roles
                 } catch (error) {
@@ -45,41 +49,44 @@ module.exports = function (RED) {
             // goes down this path if message was not found in messageStore or it failed to retrieve the roles.
             msg.discord = msg?.discord || {}
 
+            console.log('Da var jeg her')
             try {
                 guild = await node.client.guilds.fetch(guildId)
                 msg.discord.guildName = msg.discord?.guildName || guild.name
                 msg.discord.guildId = msg.discord?.guildId || guild.id
             } catch (error) {
                 node.status(redStatus('Failed to fetch roles'))
-                setTimeout(async function () { node.status({})}, 8000)
+                setTimeout(async function () { node.status({}) }, 8000)
                 return done(`Failed to fetch guildId with the following error: ${error.message}`);
             }
 
             try {
-                member = await guild.members.fetch(memberId)
-                msg.discord.memberId = msg.discord?.memberId || member.id
-                msg.discord.username = msg.discord?.username || member.user.username
-                msg.discord.targetUsername = member.user.username
-                msg.discord.targetMemberId = member.id
+                var member = await guild.members.fetch(memberId)
+                if(!(msg?.discord?.memberId === memberId)){
+                    console.log('inni her da')
+                    msg.discord.memberId = member.id
+                    msg.discord.username = member.user.username
+                }
             } catch (error) {
                 node.status(redStatus('Failed to fetch member'))
-                setTimeout(async function () { node.status({})}, 8000)
+                setTimeout(async function () { node.status({}) }, 8000)
                 return done(`Failed to fetch memberId with the following error: ${error.message}`);
             }
 
             try {
                 let roles = Array.from(member.roles.cache.map(role => `${role.name}`));
+                msg.payload = roles
                 msg.discord.roles = msg.discord?.roles || roles
 
             } catch (error) {
                 node.status(redStatus('Failed to fetch roles'))
-                setTimeout(async function () { node.status({})}, 8000)
+                setTimeout(async function () { node.status({}) }, 8000)
                 return done(`Failed to fetch roles with the following error: ${error.message}`);
             }
 
             send(msg)
             node.status(greenStatus('Roles fetched'))
-            setTimeout(async function () { node.status({})}, 8000)
+            setTimeout(async function () { node.status({}) }, 8000)
 
             return done()
 
