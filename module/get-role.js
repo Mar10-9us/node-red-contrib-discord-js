@@ -30,6 +30,7 @@ module.exports = function (RED) {
                     roles = Array.from(messageStore.messages.get(messageId).member.roles.cache.map(role => role.name))
 
                     node.status(greenStatus("Roles fetched using message-object"))
+                    setTimeout(async function () { node.status({})}, 8000)
                     msg.payload = roles
                     msg.discord.roles = roles
                 } catch (error) {
@@ -50,6 +51,7 @@ module.exports = function (RED) {
                 msg.discord.guildId = msg.discord?.guildId || guild.id
             } catch (error) {
                 node.status(redStatus('Failed to fetch roles'))
+                setTimeout(async function () { node.status({})}, 8000)
                 return done(`Failed to fetch guildId with the following error: ${error.message}`);
             }
 
@@ -59,6 +61,7 @@ module.exports = function (RED) {
                 msg.discord.username = msg.discord?.username || member.user.username
             } catch (error) {
                 node.status(redStatus('Failed to fetch member'))
+                setTimeout(async function () { node.status({})}, 8000)
                 return done(`Failed to fetch memberId with the following error: ${error.message}`);
             }
 
@@ -68,11 +71,13 @@ module.exports = function (RED) {
 
             } catch (error) {
                 node.status(redStatus('Failed to fetch roles'))
+                setTimeout(async function () { node.status({})}, 8000)
                 return done(`Failed to fetch roles with the following error: ${error.message}`);
             }
 
             send(msg)
             node.status(greenStatus('Roles fetched'))
+            setTimeout(async function () { node.status({})}, 8000)
 
             return done()
 
