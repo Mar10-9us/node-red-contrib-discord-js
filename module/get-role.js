@@ -23,9 +23,6 @@ module.exports = function (RED) {
 
             if (!(memberId)) return done('No memberId specified')
             if (!(guildId)) return done('No guildId specified')
-            console.log(msg?.memberId)
-            console.log(config?.memberId)
-            console.log(!(msg?.memberId) || !(config?.memberId))
 
             // if messageId exists, it's most likely originating from the receiveMessage-node.
             if (!(!(msg?.memberId) || !(config?.memberId)) && message) {
@@ -49,7 +46,6 @@ module.exports = function (RED) {
             // goes down this path if message was not found in messageStore or it failed to retrieve the roles.
             msg.discord = msg?.discord || {}
 
-            console.log('Da var jeg her')
             try {
                 guild = await node.client.guilds.fetch(guildId)
                 msg.discord.guildName = msg.discord?.guildName || guild.name
@@ -63,7 +59,6 @@ module.exports = function (RED) {
             try {
                 var member = await guild.members.fetch(memberId)
                 if(!(msg?.discord?.memberId === memberId)){
-                    console.log('inni her da')
                     msg.discord.memberId = member.id
                     msg.discord.username = member.user.username
                 }
