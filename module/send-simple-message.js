@@ -6,6 +6,9 @@ module.exports = function (RED) {
         // import the message-store. This is where message-object temporary gets stored.
         // Messages gets deleted if the endmost node of the flow is a reply node, or after 15 seconds.
         var connection = RED.nodes.getNode(config.connection);
+        // Exit early if no configuration node is specified.
+        if(!(connection)) return;
+
         var node = this
         node.messageStore = connection.messageStore
 
