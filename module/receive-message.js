@@ -1,12 +1,12 @@
 module.exports = function (RED) {
     function receiveMessage(config) {
         RED.nodes.createNode(this, config);
-        var parent = RED.nodes.getNode(config.connection)
+        var connection = RED.nodes.getNode(config.connection)
         this.showStatus = config.showStatus
-        if (!(parent)) return;
-        console.log(this)
-        this.messageStore = parent.messageStore
-        this.client = parent.client
+        if (!(connection)) return;
+        
+        this.messageStore = connection.messageStore
+        this.client = connection.client
         var node = this;
 
 
