@@ -3,13 +3,19 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
         var parent = RED.nodes.getNode(config.connection)
         this.showStatus = config.showStatus
-
+        if (!(parent)) return;
+        console.log(this)
         this.messageStore = parent.messageStore
         this.client = parent.client
-
         var node = this;
-        // Should this be registered in the configuration node instead?
-        node.client.on('message', message => {
+
+
+        // 
+        var onUpdateStatus = () => {
+            node.status({ fill: "green", shape: "dot", text: `${node.messageStore.messages.size} messages temporary saved in memory` });
+        }
+        // listener-callback. 
+        var onMessage = (message) => {
             if (message.author.bot) return;
 
             node.messageStore.messages.set(message.id, message)
@@ -50,15 +56,26 @@ module.exports = function (RED) {
             node.send(msg, false);
 
             node.messageStore.delayedDelete(message.id, 10000)
+        }
+
+        // event listener
+        node.client.on('message', onMessage)
+        
+        // Ensures that 
+        node.on('close', () => {
+            node.client.removeListener('message', onMessage)
+            node.client.removeListener('updateStatus', onUpdateStatus)
+            node.status({})
         })
 
         if (node.showStatus) {
-            node.messageStore.eventHandler.on('updateStatus', () => {
-                node.status({ fill: "green", shape: "dot", text: `${node.messageStore.messages.size} messages temporary saved in memory` });
-            })
+            node.messageStore.eventHandler.on('updateStatus', onUpdateStatus)
         } else {
+            node.client.removeListener('updateStatus', onUpdateStatus)
             node.status({})
         }
+
+        
     }
     RED.nodes.registerType("receiveMessage", receiveMessage);
 }
