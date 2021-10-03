@@ -1,7 +1,10 @@
 module.exports = function (RED) {
     var { redStatus, greenStatus } = require('./helperFunctions/nodeStatus')
+    var { removeNonDigits } = require('./helperFunctions/MessageHandling')
     function sendSimpleMessage(config) {
         RED.nodes.createNode(this, config);
+
+        // FUNCTIONS
 
         // import the message-store. This is where message-object temporary gets stored.
         // Messages gets deleted if the endmost node of the flow is a reply node, or after 15 seconds.
@@ -15,28 +18,32 @@ module.exports = function (RED) {
         node.client = connection.client
 
         node.on('input', async function (msg, send, done) {
-            // This node should replace every-send node
-            console.log('received message')
-            let action = (msg?.action || config?.action || 'send').toLowerCase();
-            let payload = msg?.payload || config?.message | null
-            let channelId = msg?.channelId || config.channelId || msg?.discord?.channelId || null
-            let messageId = msg?.messageId || msg?.discord?.messageId || null
-            let message = messageId ? node.messageStore.messages.get(messageId) : null
-            let isEmbed = msg?.embed === true ? true : false;
-            let messageObj = isEmbed ? { embed: msg.payload } : msg.payload;
+            // This node should replace every send-node
+            try {
+                var action = (msg?.action || config?.action || 'send').toLowerCase();
+                var payload = msg?.payload || config?.message || null
+                var channelId = removeNonDigits(msg?.channelId) || removeNonDigits(config?.channelId) || removeNonDigits(msg?.discord?.channelId) || null
+                var messageId = removeNonDigits(msg?.messageId) || removeNonDigits(config?.messageId) || removeNonDigits(msg?.discord?.messageId) || null
+
+                var message = config?.messageId ? node.messageStore.messages.get(config?.messageId) : null
+                var isEmbed = msg?.embed === true ? true : false;
+                var messageObj = isEmbed ? { embed: payload } : payload;
+            } catch (e) {
+                return done(`The node failed with the following error ${e.message}`)
+            }
+            // MUST ALSO SUPPORT DM?
 
 
             if (isEmbed && typeof payload !== 'object') return done(`To send an embed message, the payload needs to be of type 'object'. Current payload is of type ${typeof payload}`)
-            if (!(isEmbed) && typeof payload !== 'string' && typeof payload !== 'number') return done(`To send a message, the payload needs to be of type 'string' or 'number'. Current payload is of type ${typeof payload}`)
-
+            if (!(isEmbed) && typeof payload !== 'string' && typeof payload !== 'number') return done(`To send a 'normal' message, the payload needs to be of type 'string' or 'number'. Current payload is of type ${typeof payload}`)
 
 
             if (action === 'send') {
-                console.log('in send')
                 if (message) {
                     try {
-                        message.channel.send(messageObj)
-                        node.messageStore.delayedDelete(msg.discord.messageId, 15000)
+                        await message.channel.send(messageObj)
+                        // originally, it deleted the message using msg.discord.messageId. 
+                        node.messageStore.delayedDelete(messageId, 15000)
                     } catch (e) {
                         return done(`Failed to send message: ${e.message}`)
                     }
@@ -54,18 +61,16 @@ module.exports = function (RED) {
                         }
 
                     } catch (e) {
-                        return done(`Failed to fetch channel: ${e.message}`); // 'Could not fetch channel'
+                        return done(`Failed to fetch channel: ${e.message}`);
                     }
                 }
 
 
             } else if (action === 'reply') {
-                // reply
-                console.log('in reply')
                 if (message) {
                     try {
-                        (node.messageStore.messages.get(messageId)).reply(messageObj)
-                            .then(node.messageStore.delayedDelete(messageId, 15000))
+                        await message.reply(messageObj)
+                        node.message(delayedDelete(messageId, 15000))
                     } catch (e) {
                         return done(`Failed to send message: ${e.message}`);
                     }
@@ -80,7 +85,7 @@ module.exports = function (RED) {
                     }
 
                     try {
-                        channelMsg.reply(messageObj)
+                        await channelMsg.reply(messageObj)
                     } catch (e) {
                         return done(`Failed to send message: ${e.message}`);
                     }
@@ -90,15 +95,14 @@ module.exports = function (RED) {
                 if (!(messageId)) return done('You need to specify a messageId when attemtping to edit a message');
 
                 try {
-                    var channels = await node.client.channels.fetch(channelId);
-                    message = await channels.messages.fetch(messageId)
-                    message.edit(messageObj)
+                    // console.log(node.client)
+                    var channels = await node.client.channels.fetch((channelId))
+                    message = await channels.messages.fetch(messageId);
+                    await message.edit(messageObj)
                 } catch (e) {
                     return done(`Failed to edit message: ${e.message}`);
                 }
             }
-
-
 
 
             if (done) done();
