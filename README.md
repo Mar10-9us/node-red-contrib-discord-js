@@ -18,12 +18,12 @@ Nodes and functionalities
 [Remember to get your bot-token!](https://discord.com/developers/applications)
 
 
-### Changelog
-## [1.1.1]
+## Changelog
+#### [1.1.1]
 HOTFIX:
 * Logic rebuilt to properly handle setting the embed-value using both msg-properties and node configuration.
 
-## [1.1.0]
+#### [1.1.0]
 Features:
 * sendSimpleMessage now supports embeds and is now the primary node for sending and editing messages. sendAdvancedMessage is deprecated and will not receive further development or bug-fixes.
 ----
