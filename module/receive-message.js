@@ -63,7 +63,7 @@ module.exports = function (RED) {
         // event listener
         node.client.on('message', onMessage)
         
-        // Ensures that 
+        // Ensures that eventlisteneres gets removed.
         node.on('close', () => {
             node.client.removeListener('message', onMessage)
             node.client.removeListener('updateStatus', onUpdateStatus)
