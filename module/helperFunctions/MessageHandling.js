@@ -86,6 +86,21 @@ function getDiscordProperty(msg, node) {
 
 }
 
+// Should this also tell the user that the 
+function removeNonDigits(str) {
+    if(typeof str === 'string') {
+        if(/\D/g.test(str)) {
+            var newStr = str.replace(/\D/g, '')
+            return newStr
+        } else {
+            return str
+        }
+    } else {
+        return null
+    }
+}
+
+
 function isString(x) {
     return Object.prototype.toString.call(x) === "[object String]"
 }
@@ -138,3 +153,4 @@ exports.fetchRoles = fetchRoles;
 exports.isString = isString;
 exports.messageListener = messageListener;
 exports.messageStore = messageStore;
+exports.removeNonDigits = removeNonDigits;
