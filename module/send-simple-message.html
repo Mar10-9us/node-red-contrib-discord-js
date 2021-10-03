@@ -4,20 +4,36 @@
         color: '#5662f6',
         icon: 'DiscordLogo.png',
         defaults: {
-            name: {value: ''},
-            connection: {value: '', type:'DiscordConnection'},
-            action: {value: ''},
-            channelId: {value: ''},
-            message: {value: ''}
+            name: {
+                value: ''
+            },
+            connection: {
+                value: '',
+                type: 'DiscordConnection'
+            },
+            action: {
+                value: ''
+            },
+            channelId: {
+                value: ''
+            },
+            messageId: {
+                value: ''
+            },
+            message: {
+                value: ''
+            },
+            embed: {
+                value: false
+            }
         },
 
         inputs: 1,
         outputs: 0,
-        label: function() {
-            return this.name||'sendMessage'
+        label: function () {
+            return this.name || 'sendMessage'
         }
     })
-
 </script>
 
 <script type='text/html' data-template-name='sendSimpleMessage'>
@@ -30,10 +46,11 @@
         <input id='node-input-connection'>
     </div>
     <div class='form-row'>
-        <label for='node-input-action'><i class='fa fa-reply'></i> Send or reply?</label>
+        <label for='node-input-action'><i class='fa fa-reply'></i> Action</label>
         <select id='node-input-action'>
             <option value='send'>Send to channel</option>
             <option value='reply'>Reply to message</option>
+            <option value='edit'>Edit a message</option>
         </select>
     </div>
     <div class='form-row'>
@@ -41,22 +58,30 @@
         <input id='node-input-channelId'>
     </div>
     <div class='form-row'>
+        <label for='node-input-messageId'><i class='fa fa-tag'></i> Message Id</label>
+        <input id='node-input-messageId'>
+    </div>
+    <div class='form-row'>
         <label for='node-input-message'><i class='fa fa-tag'></i> Message</label>
-        <input id='node-input-message'> 
+        <input id='node-input-message'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-embed'><i class='fa fa-tag'></i> Embed?</label>
+        <input type='checkbox' id='node-input-embed'>
     </div>
 </script>
 
 <script type='text/html' data-help-name='sendSimpleMessage'>
-    <p>This replies to or sends an message to a channel.</p>
+    <p>This node can send, edit and reply to messages</p>
 
     <h3>Inputs</h3>
     <dl class='message-properties'>
         <dt>payload
-            <span class='property-type'>string</span>
+            <span class='property-type'>string | object</span>
         </dt>
         <dd>The message to be sent</dd>
 
-         <dt><code>msg.channelId</code>
+        <dt><code>msg.channelId</code>
             <span class='property-type'>string</span>
         </dt>
         <dd>The channelId to send a message to</dd>
@@ -69,28 +94,30 @@
         <dt><code>msg.action</code>
             <span class='property-type'>string</span>
         </dt>
-        <dd>Can be either 'send' or 'reply'. 'send' sends a message, 'reply' replies to a message.</dd>
+        <dd>Can be either 'send', 'reply' or 'edit'</dd>
 
-        <dt class='optional'><code>msg.discord.channelId</code>
-            <span class='property-type'>string</span>
+        <dt><code>msg.embed</code>
+            <span class='property-type'>boolean</span>
         </dt>
-        <dd>Alternative property populated by other discord-nodes - The channelId to send a message to</dd>
-
-        <dt class='optional'><code>msg.discord.messageId</code>
-            <span class='property-type'>string</span>
-        </dt>
-        <dd>Alternative property populated by other discord-nodes - The message to reply to</dd>
+        <dd>Can be either true or false. False is standard.</dd>
     </dl>
 
     <h3>Details</h3>
-    <p>This node will send or reply to a message. To send a message, the node needs an channelId and a message. To reply to a message, the node needs a messageId.</p>
-    <p>The node will look for these properties in this order:</p>
+    <p>This node will send, edit or reply to a message. If the message sent to this node originates from a
+        <code>receiveMessage</code>-node, this node will gather the necessary information automatically, and all you
+        have to do is edit the <code>msg.payload</code> to specify what text you want to send.</p>
+    <p>If the message does not originate from a <code>receiveMessage</code>-node, you have to provide the node with the
+        necessary properties to be able to send/reply to/edit messages. To send a message, the node needs a channelId,
+        and a message(text). To reply or edit a message, the node needs a channelId, messageId and a message(text)</p>
+    <p>There is currently three ways to set the needed properties, and the node wil look for these in this order:</p>
+    <p> (1) properties directly under <code>msg.</code> > (2) node configuration > (3) properties under <code>msg.discord.</code>
+    </p>
     <dl>
-        <dt>1. <code>msg.channelId</code> OR <code>msg.messageId</code> AND <code>msg.payload</code></dt>
-        <dd>The payload contains the message to be sent.</dd>
-        <dt>2. <code>node-properties</code></dt>
-        <dd>If you specify the properties in the nodes config</dd>
-        <dt>3. <code>msg.discord.channelId</code> OR <code>msg.discord.messageId</code> AND <code>msg.payload</code></dt>
-        <dd>The payload contains the message to be sent.</dd>
+        <dt>1. <code>Properties directly under msg.</code></dt>
+        <dd><code>msg.action, msg.channelId, msg.messageId, msg.embed</code></dd>
+        <dt>2. <code>node configuration</code></dt>
+        <dd>Specify the settings by double clicking on the node and setting the the properties directly</dd>
+        <dt>3. <code>properties under msg.discord</code></dt>
+        <dd>generated by other discord-nodes, for example the receiveMessage-node. Will contain channelId, messageId etc.</dd>
     </dl>
 </script>
