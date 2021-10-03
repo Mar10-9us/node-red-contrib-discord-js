@@ -9,7 +9,7 @@ Nodes and functionalities
 * receiveMessage
 	* Receives message sent in a channel the bot has access to, or via direct messages.
 * getRole
-	* Fetches the role of the user specified. Can easily be chained with other nodes in this module
+	* Fetches the role of the user specified. Can easily be chained with other nodes in this module.
 * sendSimpleMesasge
 	* Node for sending and editing messages. Supports [embeds](https://discordjs.guide/popular-topics/embeds.html#using-an-embed-object).
 * [DEPRECATED] sendAdvancedMessage
