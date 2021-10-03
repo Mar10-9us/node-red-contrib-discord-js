@@ -1,5 +1,5 @@
 # node-red-contrib-discord-js-drusilla
-### Current version: 1.1.0
+### Current version: 1.1.1
 
 This node implements Discord.js V12.5.3 in Node-RED. The only reason for it being named 'Drusilla' at the end is because i had to make the package-name unique.
 
@@ -17,10 +17,17 @@ Nodes and functionalities
  		
 [Remember to get your bot-token!](https://discord.com/developers/applications)
 
-### Changelog 1.1.0
+
+### Changelog
+## [1.1.1]
+HOTFIX:
+* Logic rebuilt to properly handle setting the embed-value using both msg-properties and node configuration.
+
+## [1.1.0]
 Features:
 * sendSimpleMessage now supports embeds and is now the primary node for sending and editing messages. sendAdvancedMessage is deprecated and will not receive further development or bug-fixes.
 ----
+
 
 ### TODO:
 * getUser node

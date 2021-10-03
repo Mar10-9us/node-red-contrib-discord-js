@@ -26,7 +26,7 @@ module.exports = function (RED) {
                 var messageId = removeNonDigits(msg?.messageId) || removeNonDigits(config?.messageId) || removeNonDigits(msg?.discord?.messageId) || null
 
                 var message = config?.messageId ? node.messageStore.messages.get(config?.messageId) : null
-                var isEmbed = msg?.embed === true ? true : false;
+                var isEmbed = msg.hasOwnProperty('embed') ? msg.embed : config.embed;
                 var messageObj = isEmbed ? { embed: payload } : payload;
             } catch (e) {
                 return done(`The node failed with the following error ${e.message}`)
