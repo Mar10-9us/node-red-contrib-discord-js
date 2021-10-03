@@ -34,7 +34,8 @@ module.exports = function (RED) {
                         "guildId": message.guild.id,
                         "memberId": message.member.id,
                         "username": message.member.user.username,
-                        "channelType": message.channel.type
+                        "channelType": message.channel.type,
+                        "channelId": message.channel.id
                     }
                 }
 
@@ -48,7 +49,8 @@ module.exports = function (RED) {
                         "messageId": message.id,
                         "memberId": message.author.id,
                         "username": message.author.username,
-                        "channelType": message.channel.type
+                        "channelType": message.channel.type,
+                        "channelId": message.channel.id
                     }
                 }
             }
